@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Whiteboard extends UnicastRemoteObject implements IWhiteboard{
 
-    public Whiteboard() throws RemoteException { super(1099); }
+    public Whiteboard() throws RemoteException { super(0); }
 
     public Whiteboard(int ngrokPort) throws RemoteException {
         super(1099, new NgrokClientSocketFactory(ngrokPort), null);
