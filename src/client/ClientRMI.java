@@ -8,8 +8,8 @@ import java.rmi.Naming;
 
 public class ClientRMI {
     public static void main(String[] args) throws Exception {
-        String host = args.length > 0 ? args[0] : "localhost";
-        String objName = "rmi://" + host + ":1099/Board";
+        String host = args.length > 0 ? args[0] : "localhost:1099";
+        String objName = "rmi://" + host + "/Board";
         IWhiteboard board = (IWhiteboard) Naming.lookup(objName);
 
         SwingUtilities.invokeLater(() -> {
