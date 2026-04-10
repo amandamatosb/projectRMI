@@ -7,7 +7,12 @@ import java.rmi.registry.LocateRegistry;
 public class ServerRMI {
     public static void main(String[] args) {
         try {
-            IWhiteboard board = new Whiteboard();
+            IWhiteboard board;
+            if (args.length > 0) {
+                board = new Whiteboard(Integer.parseInt(args[0]));
+            } else {
+                board = new Whiteboard();
+            }
             String objName = "rmi://localhost/Board";
 
             System.out.println("Registering the object on RMIRegistry...");
