@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Whiteboard extends UnicastRemoteObject implements IWhiteboard{
 
-    public Whiteboard() throws RemoteException {}
+    public Whiteboard() throws RemoteException { super(1099); }
     List<Stroke> synchronizedList = Collections.synchronizedList(new ArrayList<>());
 
     @Override
