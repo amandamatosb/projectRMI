@@ -4,11 +4,24 @@ import interfaces.IWhiteboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.Naming;
+import java.rmi.server.RMISocketFactory;
 
 public class ClientRMI {
     public static void main(String[] args) throws Exception {
         String host = args.length > 0 ? args[0] : "localhost:1099";
+        String[] parts = host.split(":");
+        String rmiHost = parts[0];
+        int rmiPort = parts.length > 1 ? Integer.parseInt(parts[1]) : 1099;
+
+        RMISocketFactory.setSocketFactory(new RMISocketFactory() {
+            public Socket createSocket(String h, int p) throws IOException { return new Socket(rmiHost, rmiPort); }
+            public ServerSocket createServerSocket(int p) throws IOException { return new ServerSocket(p); }
+        });
+
         String objName = "rmi://" + host + "/Board";
         IWhiteboard board = (IWhiteboard) Naming.lookup(objName);
 
