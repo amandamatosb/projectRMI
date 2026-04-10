@@ -1,26 +1,47 @@
 package client;
 
 import interfaces.IWhiteboard;
-import interfaces.Stroke;
 
+import javax.swing.*;
 import java.awt.*;
 import java.rmi.Naming;
-
-import static java.awt.Color.blue;
 
 public class ClientRMI {
     public static void main(String[] args) throws Exception {
         String objName = "rmi://localhost:1099/Board";
         IWhiteboard board = (IWhiteboard) Naming.lookup(objName);
 
-        Stroke firstline = new Stroke(Color.blue, 2);
-        firstline.addPoint(1,2);
-        firstline.addPoint(1, 4);
-        firstline.addPoint(1, 6);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Whiteboard");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
 
-        board.sendStroke(firstline);
+            WhiteboardPanel panel = new WhiteboardPanel(board);
 
-        System.out.println("All strokes: " + board.getAllStrokes().size());
+            JToolBar toolbar = new JToolBar();
+            toolbar.setFloatable(false);
 
+            Color[] colors = {Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE};
+            for (Color c : colors) {
+                JButton btn = new JButton();
+                btn.setBackground(c);
+                btn.setOpaque(true);
+                btn.setPreferredSize(new Dimension(24, 24));
+                btn.addActionListener(e -> panel.setColor(c));
+                toolbar.add(btn);
+            }
+
+            toolbar.addSeparator();
+            toolbar.add(new JLabel(" Espessura: "));
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel(2, 1, 20, 1));
+            spinner.setMaximumSize(new Dimension(50, 24));
+            spinner.addChangeListener(e -> panel.setThickness((int) spinner.getValue()));
+            toolbar.add(spinner);
+
+            frame.add(toolbar, BorderLayout.NORTH);
+            frame.add(panel, BorderLayout.CENTER);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }
